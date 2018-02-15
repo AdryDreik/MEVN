@@ -16,7 +16,5 @@ try {
         }
     })
 } catch (err) {
-    console.log('----------------entrando por el error--------------------');
-    console.log(err instanceof TypeError);
-    console.log('------------------------------------');
+    console.error(err);
 }
