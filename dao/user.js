@@ -40,5 +40,52 @@ module.exports = {
                 mensaje: 'Error en los parametros'
             })
         }
+    },
+    findOne: (req, res) => {
+        const params = req.body;
+        if (params.password && params.email) {
+            User.findOne({
+                email: params.email
+            }, (err, user) => {
+                if (err) {
+                    res.status(500).json({
+                        finalizado: false,
+                        mensaje: err,
+                        datos: {}
+                    })
+                } else {
+                    bcrypt.compare(params.password, user.password, (err, check) => {
+                        if (err) {
+                            res.status(412).json({
+                                finalizado: false,
+                                mensaje: err,
+                                datos: {}
+                            })      
+                        } else {
+                            if (check) {
+                                res.status(200).json({
+                                    finalizado: true,
+                                    mensaje: 'Usuario satisfactoriamente logueado',
+                                    datos: user
+                                })
+                            } else {
+                                res.status(412).json({
+                                    finalizado: false,
+                                    mensaje: 'Error en la contraseña',
+                                    datos: {}
+                                })  
+                            }
+                        }
+                    })
+                }
+            })
+        } else {
+            res.status(412).json({
+                finalizado: false,
+                mensaje: 'Error al enviar los parametros',
+                datos: {}
+            })
+        }
+        User.findOne()
     }
 }
